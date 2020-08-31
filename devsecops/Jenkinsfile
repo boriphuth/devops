@@ -43,8 +43,8 @@ pipeline {
 						docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
 						cat trufflehog
 					'''
-			
-					def truffle = readFile "devsecops/trufflehog"
+
+					def truffle = readFile(file: 'trufflehog')
 					
 					if (truffle.length() == 0) {
 						echo "Good to go" 
