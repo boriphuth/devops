@@ -1,14 +1,14 @@
-properties ([
-  parameters ([
-    string(name: 'appRepoURL', value: "https://github.com/boriphuth/devops.git", description: "Application's git repository"),
-    // string(name: 'dockerImage', value: "", description: "docker Image with tag"),
-    // string(name: 'targetURL', value: "", description: "Web application's URL"),
-    // choice(name: 'appType', choices: ['Java', 'Node', 'Angular'], description: 'Type of application'),
-    // string(name: 'hostMachineName', value: "", description: "Hostname of the machine"),
-    // string(name: 'hostMachineIP', value: "", description: "Public IP of the host machine")
-   // password(name: 'hostMachinePassword', value: "", description: "Password of the target machine")
-    ])
-])
+// properties ([
+//   parameters ([
+//     string(name: 'appRepoURL', value: "https://github.com/boriphuth/devops.git", description: "Application's git repository"),
+//     string(name: 'dockerImage', value: "", description: "docker Image with tag"),
+//     string(name: 'targetURL', value: "", description: "Web application's URL"),
+//     choice(name: 'appType', choices: ['Java', 'Node', 'Angular'], description: 'Type of application'),
+//     string(name: 'hostMachineName', value: "", description: "Hostname of the machine"),
+//     string(name: 'hostMachineIP', value: "", description: "Public IP of the host machine")
+//    // password(name: 'hostMachinePassword', value: "", description: "Password of the target machine")
+//     ])
+// ])
 
 pipeline {
    agent any
@@ -23,6 +23,7 @@ pipeline {
    //   MYSQL_DB_PASSWORD="test"
    //   MYSQL_DB_USER="test"
    //   MYSQL_DB_ROOT="tooor"
+     APPLICATION_REPOSITORY="https://github.com/boriphuth/devops.git"
    }
    stages {
 	   stage('pre-build setup'){
@@ -40,7 +41,7 @@ pipeline {
 			  catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
 					sh '''
 						rm trufflehog || true
-						docker run gesellix/trufflehog --json ${appRepoURL} > trufflehog
+						docker run gesellix/trufflehog --json ${APPLICATION_REPOSITORY} > trufflehog
 						cat trufflehog
 					'''
 
