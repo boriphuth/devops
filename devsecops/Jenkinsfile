@@ -21,6 +21,25 @@ pipeline {
 			''' 
 		 }
       }
+	  stage('Check secrets'){
+	  	catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+            sh '''
+            rm trufflehog || true
+            docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
+            cat trufflehog
+            '''
+	  
+			def truffle = readFile "trufflehog"
+			
+			if (truffle.length() == 0) {
+				echo "Good to go" 
+			}
+			else {
+				echo "Warning! Secrets are committed into your git repository."
+				throw new Exception("Secrets might be committed into your git repo")
+			}
+		}
+      } 
       stage('Build') {
     	steps {
             sh '''
