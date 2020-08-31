@@ -14,15 +14,15 @@ pipeline {
    }
    stages {
 	  stage('pre-build setup'){
-			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-				sh '''
-					docker-compose -f devsecops/Sonarqube/sonar.yml up -d
-					docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
-				''' 
-			}
+	  	catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+			sh '''
+				docker-compose -f devsecops/Sonarqube/sonar.yml up -d
+				docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
+			''' 
+		 }
       }
       stage('Build') {
-         steps {
+    	steps {
             sh '''
                docker images -f dangling=true -q | xargs docker rmi || true
                mvn -f backend/pom.xml clean package
