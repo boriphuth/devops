@@ -19,7 +19,7 @@ pipeline {
 					sh '''
 						docker-compose -f devsecops/Sonarqube/sonar.yml up -d
 						docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
-						'''
+					'''
 				}
 		   }
         }
@@ -27,9 +27,9 @@ pipeline {
 		  steps {
 			  catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
 					sh '''
-					rm trufflehog || true
-					docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
-					cat trufflehog
+						rm trufflehog || true
+						docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
+						cat trufflehog
 					'''
 			
 					def truffle = readFile "trufflehog"
