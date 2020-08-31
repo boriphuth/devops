@@ -14,31 +14,35 @@ pipeline {
    }
    stages {
 	   stage('pre-build setup'){
-			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-				sh '''
-					docker-compose -f devsecops/Sonarqube/sonar.yml up -d
-					docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
-					'''
-			}
+		   steps {
+				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+					sh '''
+						docker-compose -f devsecops/Sonarqube/sonar.yml up -d
+						docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
+						'''
+				}
+		   }
         }
 	  stage('Check secrets'){
-	  	catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-            sh '''
-            rm trufflehog || true
-            docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
-            cat trufflehog
-            '''
-	  
-			def truffle = readFile "trufflehog"
+		  steps {
+			  catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+					sh '''
+					rm trufflehog || true
+					docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
+					cat trufflehog
+					'''
 			
-			if (truffle.length() == 0) {
-				echo "Good to go" 
-			}
-			else {
-				echo "Warning! Secrets are committed into your git repository."
-				throw new Exception("Secrets might be committed into your git repo")
-			}
-		}
+					def truffle = readFile "trufflehog"
+					
+					if (truffle.length() == 0) {
+						echo "Good to go" 
+					}
+					else {
+						echo "Warning! Secrets are committed into your git repository."
+						throw new Exception("Secrets might be committed into your git repo")
+					}
+				}
+		  }
       } 
       stage('Build') {
          steps {
@@ -79,8 +83,7 @@ pipeline {
                      remote.identityFile = '~/.ssh/archiver.key'
                      sshPut remote: remote, filterRegex: '.jar$',from: './backend/target' ,into: '/home/vagrant/archiver/backend'
                   }
-                  }
-            
+                }
             )
          }              
       }
