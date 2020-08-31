@@ -14,7 +14,7 @@ pipeline {
    }
    stages {
 	  stage('pre-build setup'){
-	  	catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+	  	steps {
 			sh '''
 				docker-compose -f devsecops/Sonarqube/sonar.yml up -d
 				docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
