@@ -40,7 +40,7 @@ pipeline {
 			  catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
 					sh '''
 						rm trufflehog || true
-						docker run gesellix/trufflehog --json --regex ${appRepoURL} > trufflehog
+						docker run gesellix/trufflehog --json ${appRepoURL} > trufflehog
 						cat trufflehog
 					'''
 
