@@ -46,14 +46,14 @@ pipeline {
       //       }
       // }
 
-      stage('read') {
-           steps {
-               script {
-                   def data = readFile(file: 'owasp-dependency-check.sh')
-                   println(data)
-               }
-           }
-       }
+      // stage('read') {
+      //      steps {
+      //          script {
+      //              def data = readFile(file: 'devsecops/owasp-dependency-check.sh')
+      //              println(data)
+      //          }
+      //      }
+      //  }
 
       stage('Source Composition Analysis'){
          steps {
