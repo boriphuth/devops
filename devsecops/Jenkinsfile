@@ -14,7 +14,7 @@ pipeline {
    //   MYSQL_DB_ROOT="tooor"
    }
    stages {
-	   stage('pre-build setup'){
+	  stage('pre-build setup'){
 		   steps {
 				sh '''
 						docker-compose -f devsecops/Sonarqube/sonar.yml up -d
@@ -69,7 +69,8 @@ pipeline {
                      remote.identityFile = '~/.ssh/archiver.key'
                      sshPut remote: remote, filterRegex: '.jar$',from: './backend/target' ,into: '/home/vagrant/archiver/backend'
                   }
-                }
+                  }
+            
             )
          }              
       }
