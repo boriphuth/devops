@@ -9,9 +9,6 @@ pipeline {
      MYSQL_PROD_URL="production.devops:3306"
      MYSQL_DB_NAME="test"
 	 APPLICATION_REPOSITORY="https://github.com/boriphuth/devops.git"
-   //   MYSQL_DB_PASSWORD="test"
-   //   MYSQL_DB_USER="test"
-   //   MYSQL_DB_ROOT="tooor"
    }
    stages {
 	  stage('pre-build setup'){

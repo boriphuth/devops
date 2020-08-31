@@ -8,9 +8,6 @@ pipeline {
      MYSQL_STAGING_URL="staging.devops:3306"
      MYSQL_PROD_URL="production.devops:3306"
      MYSQL_DB_NAME="test"
-   //   MYSQL_DB_PASSWORD="test"
-   //   MYSQL_DB_USER="test"
-   //   MYSQL_DB_ROOT="tooor"
    }
    stages {
       stage('Build') {
