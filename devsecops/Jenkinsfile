@@ -13,6 +13,15 @@ pipeline {
      MYSQL_DB_ROOT="tooor"
    }
    stages {
+      stage('Check-Git-Secrets') {
+         steps {
+            sh '''
+               rm trufflehog || true
+               docker run gesellix/trufflehog --json --regex https://github.com/boriphuth/devops.git > trufflehog
+               cat trufflehog
+            '''   
+         }
+      }
       stage('Build') {
          steps {
             sh '''
@@ -20,6 +29,17 @@ pipeline {
                mvn -f backend/pom.xml clean package
                npm --prefix frontend install
             '''   
+         }
+      }
+      stage('Source Composition Analysis') {
+         steps {
+            sh '''
+               rm owasp* || true
+               wget "https://raw.githubusercontent.com/boriphuth/devops/DevSecOps/devsecops/devsecops/owasp-dependency-check.sh"
+               chmod +x owasp-dependency-check.sh
+               bash owasp-dependency-check.sh
+               cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml
+            '''
          }
       }
       stage('Archive') {

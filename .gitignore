@@ -17,3 +17,4 @@ resources/static/
 logs/
 *.bak
 *.log
+devsecops/Anchore-Engine/.DS_Store
