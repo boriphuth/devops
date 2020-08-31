@@ -13,14 +13,13 @@ pipeline {
      MYSQL_DB_ROOT="tooor"
    }
    stages {
-      stage('Check-Git-Secrets') {
-         steps {
-            sh '''
-               rm trufflehog || true
-               docker run gesellix/trufflehog --json --regex https://github.com/boriphuth/devops.git > trufflehog
-               cat trufflehog
-            '''   
-         }
+	  stage('pre-build setup'){
+			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+				sh '''
+					docker-compose -f devsecops/Sonarqube/sonar.yml up -d
+					docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
+				''' 
+			}
       }
       stage('Build') {
          steps {
@@ -29,17 +28,6 @@ pipeline {
                mvn -f backend/pom.xml clean package
                npm --prefix frontend install
             '''   
-         }
-      }
-      stage('Source Composition Analysis') {
-         steps {
-            sh '''
-               rm owasp* || true
-               wget "https://raw.githubusercontent.com/boriphuth/devops/DevSecOps/devsecops/devsecops/owasp-dependency-check.sh"
-               chmod +x owasp-dependency-check.sh
-               bash owasp-dependency-check.sh
-               cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml
-            '''
          }
       }
       stage('Archive') {
