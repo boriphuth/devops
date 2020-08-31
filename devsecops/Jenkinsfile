@@ -44,7 +44,7 @@ pipeline {
 						cat trufflehog
 					'''
 			
-					def truffle = readFile "trufflehog"
+					def truffle = readFile "devsecops/trufflehog"
 					
 					if (truffle.length() == 0) {
 						echo "Good to go" 
