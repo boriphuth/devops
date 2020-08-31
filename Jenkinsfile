@@ -18,9 +18,20 @@ pipeline {
          steps {
             sh '''
                rm trufflehog || true
-               docker run gesellix/trufflehog --json https://github.com/cehkunal/webapp.git > trufflehog
+               docker run gesellix/trufflehog --json https://github.com/boriphuth/devops.git > trufflehog
                cat trufflehog
             '''   
+         }
+      }
+      stage ('Source Composition Analysis') {
+         steps {
+            sh '''
+               rm owasp* || true
+               wget "https://raw.githubusercontent.com/boriphuth/devops/DevSecOps/devsecops/owasp-dependency-check.sh"
+               chmod +x owasp-dependency-check.sh
+               bash owasp-dependency-check.sh
+               cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml
+            '''
          }
       }
       stage('Build') {
