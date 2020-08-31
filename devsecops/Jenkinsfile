@@ -44,15 +44,15 @@ pipeline {
 						cat trufflehog
 					'''
 
-					def truffle = readFile(file: 'trufflehog')
+					// def truffle = readFile(file: 'trufflehog')
 					
-					if (truffle.length() == 0) {
-						echo "Good to go" 
-					}
-					else {
-						echo "Warning! Secrets are committed into your git repository."
-						throw new Exception("Secrets might be committed into your git repo")
-					}
+					// if (truffle.length() == 0) {
+					// 	echo "Good to go" 
+					// }
+					// else {
+					// 	echo "Warning! Secrets are committed into your git repository."
+					// 	throw new Exception("Secrets might be committed into your git repo")
+					// }
 				}
 		  }
       } 
