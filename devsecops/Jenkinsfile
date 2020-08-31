@@ -49,7 +49,7 @@ pipeline {
       stage('read') {
            steps {
                script {
-                   def data = readFile(file: 'zorg.txt')
+                   def data = readFile(file: 'owasp-dependency-check.sh')
                    println(data)
                }
            }
