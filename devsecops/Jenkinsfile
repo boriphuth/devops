@@ -35,31 +35,33 @@ pipeline {
 	//   } 
 
       stage('Source Composition Analysis'){
+         steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                  sh "git clone ${APPLICATION_REPOSITORY} || true" 
-                  repoName = sh(returnStdout: true, script: """echo \$(basename ${APPLICATION_REPOSITORY.trim()})""").trim()
-                  repoName=sh(returnStdout: true, script: """echo ${repoName} | sed 's/.git//g'""").trim()
-         
-            if (appType.equalsIgnoreCase("Java")) {
-                  app_type = "pom.xml"	
+                     sh "git clone ${APPLICATION_REPOSITORY} || true" 
+                     repoName = sh(returnStdout: true, script: """echo \$(basename ${APPLICATION_REPOSITORY.trim()})""").trim()
+                     repoName=sh(returnStdout: true, script: """echo ${repoName} | sed 's/.git//g'""").trim()
+            
+               if (appType.equalsIgnoreCase("Java")) {
+                     app_type = "pom.xml"	
+               }
+               else {
+                  app_type = "package.json"
+                  dir ("${repoName}") {
+                  sh "npm install"
+                     }
+               }
+                  snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "${repoName}/${app_type}"
+                  
+               def snykFile = readFile "snyk_report.html"
+               if (snykFile.exists()) {
+                  throw new Exception("Vulnerable dependencies found!")    
+               }
+               else {
+                  echo "Please enter the app repo URL"
+                     currentBuild.Result = "FAILURE"
+               }   
             }
-            else {
-               app_type = "package.json"
-               dir ("${repoName}") {
-               sh "npm install"
-                  }
-            }
-               snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "${repoName}/${app_type}"
-               
-            def snykFile = readFile "snyk_report.html"
-            if (snykFile.exists()) {
-               throw new Exception("Vulnerable dependencies found!")    
-            }
-            else {
-               echo "Please enter the app repo URL"
-                  currentBuild.Result = "FAILURE"
-            }   
-         }
+         }  
       }
       stage('Build') {
          steps {
