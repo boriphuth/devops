@@ -63,8 +63,10 @@ pipeline {
                      docker images -f dangling=true -q | xargs docker rmi || true
                      mvn -f backend/pom.xml clean package
                      npm --prefix frontend install
-                      snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "${repoName}/${app_type}"
-                        
+                     
+                     snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "backend/pom.xml"
+                     snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "frontend/package.json"  
+                     
                      def snykFile = readFile "snyk_report.html"
                      if (snykFile.exists()) {
                            throw new Exception("Vulnerable dependencies found!")    
