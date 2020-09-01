@@ -52,8 +52,7 @@ pipeline {
                      remote.identityFile = '~/.ssh/archiver.key'
                      sshPut remote: remote, filterRegex: '.jar$',from: './backend/target' ,into: '/home/vagrant/archiver/backend'
                   }
-                  }
-            
+               }       
             )
          }              
       }
