@@ -46,28 +46,26 @@ pipeline {
       }
       stage('Source Composition Analysis'){
          steps {
-            withCredentials([string(credentialsId: 'snyk_token', variable: 'snyk_token')]){
-               script {
-                  snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "backend/pom.xml"
-                  def snykFileBack = readFile "snyk_report.html"
-                  if (snykFileBack.exists()) {
+            script {
+               snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'ecbe6cbf-1964-4386-af96-26f0e2ad0916', targetFile: "backend/pom.xml"
+               def snykFileBack = readFile "snyk_report.html"
+               if (snykFileBack.exists()) {
                      throw new Exception("Vulnerable dependencies found!")    
-                  }
-                  else {
-                     echo "Please enter the app repo URL"
-                     currentBuild.Result = "FAILURE"
-                  }
-                  rm snyk_report.html || true
-                  snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "frontend/package.json"
-                  def snykFileFront = readFile "snyk_report.html"
-                  if (snykFileFront.exists()) {
-                     throw new Exception("Vulnerable dependencies found!")    
-                  }
-                  else {
-                     echo "Please enter the app repo URL"
-                     currentBuild.Result = "FAILURE"
-                  }                    
                }
+               else {
+                  echo "Please enter the app repo URL"
+                     currentBuild.Result = "FAILURE"
+               }
+               // rm snyk_report.html || true
+               snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'ecbe6cbf-1964-4386-af96-26f0e2ad0916', targetFile: "frontend/package.json"
+               def snykFileFront = readFile "snyk_report.html"
+               if (snykFileFront.exists()) {
+                     throw new Exception("Vulnerable dependencies found!")    
+               }
+               else {
+                  echo "Please enter the app repo URL"
+                  currentBuild.Result = "FAILURE"
+               }                    
             }
          }  
       }
