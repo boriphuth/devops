@@ -1,0 +1,19 @@
+# comment
+*/temp*
+*/*/temp*
+temp?
+.git
+.gitignore
+/src
+.pom.xml
+/.git
+/.settings
+.classpath
+.project
+.springBeans
+Dockerfile*
+docker-compose*
+.dockerignore
+README.md
+LICENSE
+.vscode
