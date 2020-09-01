@@ -17,3 +17,5 @@ docker rm -vf $(docker ps -a -q)
 #To delete all the images,
 docker rmi -f $(docker images -a -q)
 ```
+
+snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "frontend/package.json"
