@@ -18,14 +18,14 @@ pipeline {
 	  APPLICATION_REPOSITORY="https://github.com/boriphuth/devops.git"
    }
    stages {
-      stage('pre-build setup'){
-         steps {
-            sh '''
-               docker-compose -f devsecops/Sonarqube/sonar.yml up -d
-               docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
-            '''
-         }
-      }
+      // stage('pre-build setup'){
+      //    steps {
+      //       sh '''
+      //          docker-compose -f devsecops/Sonarqube/sonar.yml up -d
+      //          docker-compose -f devsecops/Anchore-Engine/docker-compose.yaml up -d
+      //       '''
+      //    }
+      // }
       // stage('Check secrets'){
       //    steps {
       //       sh '''
