@@ -35,13 +35,19 @@ pipeline {
       //       '''
       //       }
       // } 
+      stage('Build') {
+         steps {
+            sh '''
+               docker images -f dangling=true -q | xargs docker rmi || true
+               mvn -f backend/pom.xml clean package
+               npm --prefix frontend install
+            '''   
+         }
+      }
       stage('Source Composition Analysis'){
          steps {
             withCredentials([string(credentialsId: 'snyk_token', variable: 'snyk_token')]){
                script {
-                  docker images -f dangling=true -q | xargs docker rmi || true
-                  mvn -f backend/pom.xml clean package
-
                   snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "backend/pom.xml"
                   def snykFileBack = readFile "snyk_report.html"
                   if (snykFileBack.exists()) {
@@ -51,9 +57,6 @@ pipeline {
                      echo "Please enter the app repo URL"
                      currentBuild.Result = "FAILURE"
                   }
-
-                  npm --prefix frontend install
-
                   rm snyk_report.html || true
                   snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "frontend/package.json"
                   def snykFileFront = readFile "snyk_report.html"
@@ -68,15 +71,6 @@ pipeline {
             }
          }  
       }
-      // stage('Build') {
-      //    steps {
-      //       sh '''
-      //          docker images -f dangling=true -q | xargs docker rmi || true
-      //          mvn -f backend/pom.xml clean package
-      //          npm --prefix frontend install
-      //       '''   
-      //    }
-      // }
       // stage('Archive') {
       //    steps {
       //       parallel(
