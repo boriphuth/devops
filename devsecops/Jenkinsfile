@@ -47,14 +47,27 @@ pipeline {
 
                         snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "backend/pom.xml"
                         
-                        def snykFile = readFile "snyk_report.html"
-                        if (snykFile.exists()) {
+                        def snykFileBack = readFile "snyk_report.html"
+                        if (snykFileBack.exists()) {
                               throw new Exception("Vulnerable dependencies found!")    
                         }
                         else {
                            echo "Please enter the app repo URL"
                            currentBuild.Result = "FAILURE"
-                        } 
+                        }
+
+                        rm snyk_report.html || true
+                        snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: ${snyk_token}, targetFile: "frontend/package.json"
+                        
+                        def snykFileFront = readFile "snyk_report.html"
+                        if (snykFileFront.exists()) {
+                              throw new Exception("Vulnerable dependencies found!")    
+                        }
+                        else {
+                           echo "Please enter the app repo URL"
+                           currentBuild.Result = "FAILURE"
+                        }
+
                      '''                  
                   }
                }    
