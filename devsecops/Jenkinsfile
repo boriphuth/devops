@@ -47,7 +47,7 @@ pipeline {
       stage('Source Composition Analysis'){
          steps {
             script {
-               snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'SnykSec', snykTokenId: 'snyk-token', targetFile: "backend/pom.xml"
+               snykSecurity failOnIssues: false, projectName: '$BUILD_NUMBER', severity: 'high', snykInstallation: 'Snyk', snykTokenId: 'snyk-token', targetFile: 'backend/pom.xml'
                def snykFileBack = readFile "snyk_report.html"
                if (snykFileBack.exists()) {
                      throw new Exception("Vulnerable dependencies found!")    
