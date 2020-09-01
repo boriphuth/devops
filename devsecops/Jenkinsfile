@@ -263,7 +263,7 @@ pipeline {
          }
       }                       
    }
-    post {
+   post {
       failure {
          script {
             currentBuild.result = 'FAILURE'
