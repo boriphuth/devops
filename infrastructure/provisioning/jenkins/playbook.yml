@@ -61,6 +61,7 @@
         nodejs_version: "12.x"
         nodejs_npm_global_packages: ["rimraf","mkdirp","copyfiles"]
     - role: infrastructure/provisioning/roles/geerlingguy.pip
-        vars: 
-          pip_install_packages:
-          - name: docker-py 
+      become: yes
+      vars: 
+        pip_install_packages:
+        - name: docker-py 
