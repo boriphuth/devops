@@ -23,3 +23,8 @@ bcdedit /set hypervisorlaunchtype off
 ## Restart PC and run below command
 bcdedit /set hypervisorlaunchtype auto
 ```
+
+## https://docs.archerysec.com/
+```bash
+docker run -it -d -p 8000:8000 archerysec/archerysec:latest
+```
